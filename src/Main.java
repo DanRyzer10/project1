@@ -1,8 +1,10 @@
 import views.VentanaPrincipal;
 
+import javax.swing.*;
+
 public class Main {
     public static void main(String[] args) {
-        VentanaPrincipal ventana = new VentanaPrincipal();
+        SwingUtilities.invokeLater(VentanaPrincipal::new);
     }
 }
 

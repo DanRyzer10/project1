@@ -1,13 +1,17 @@
 package views;
 
 import controllers.*;
+import controllers.SortingWorker.*;
 
 import javax.swing.*;
+import static controllers.SortingWorker.*;
+
+
 
 public class Menu extends JMenuBar {
-    private int interval = 50;
-    public Menu(){
-
+    private SortingWorker sortingWorker;
+    public static boolean isPaused = false;
+    public Menu() {
         //menus
         JMenu archivo = new JMenu("Archivo");
         JMenu algoritmo = new JMenu("Algoritmo");
@@ -17,19 +21,27 @@ public class Menu extends JMenuBar {
         //items menu archivo
         //items menu algoritmo
         JMenuItem bubbleSort = new JMenuItem("Ordenamiento burbuja");
-        bubbleSort.addActionListener(new bubbleSortList());
+        bubbleSort.addActionListener(e -> startSorting(SortingAlgorithm.BUBBLE_SORT));
         JMenuItem insertionSort = new JMenuItem("Ordenamiento por inserción");
-        insertionSort.addActionListener(new InsertionSortList());
+        insertionSort.addActionListener(e -> startSorting(SortingAlgorithm.INSERTION_SORT));
         JMenuItem selectionSort = new JMenuItem("Ordenamiento por selección");
-        selectionSort.addActionListener(new SelectionSortList());
+        selectionSort.addActionListener(e -> startSorting(SortingAlgorithm.SELECTION_SORT));
         JMenuItem mergeSort = new JMenuItem("Ordenamiento rapido");
-        mergeSort.addActionListener(new QuickSortList());
-
+        mergeSort.addActionListener(e -> startSorting(SortingAlgorithm.QUICK_SORT));
+        JMenuItem pauseItem = new JMenuItem("Pausar/Reanudar");
+        pauseItem.addActionListener(e -> togglePause());
+        opciones.add(pauseItem);
         //items de menu option
         JMenuItem desordenar = new JMenuItem("Desordenar");
-        JMenu pauseIntervalMenu = new JMenu("Intervalo de Pausa");
+        JMenu pauseIntervalMenu = new JMenu("Velocidad");
         ButtonGroup pauseIntervalGroup = new ButtonGroup();
-        desordenar.addActionListener(new Desordenar());
+        desordenar.addActionListener(
+                e -> {
+                    if (sortingWorker != null && !sortingWorker.isDone()) {
+                        sortingWorker.cancel(true);
+                    }
+                    Algoritmos.desordenar(VentanaPrincipal.panelPrincipal.getArray());
+                });
         JRadioButtonMenuItem slowItem = new JRadioButtonMenuItem("Lento", true);
         JRadioButtonMenuItem mediumItem = new JRadioButtonMenuItem("Medio");
         JRadioButtonMenuItem fastItem = new JRadioButtonMenuItem("Rápido");
@@ -45,7 +57,7 @@ public class Menu extends JMenuBar {
         algoritmo.add(mergeSort);
         opciones.add(desordenar);
         opciones.add(pauseIntervalMenu);
-        slowItem.addActionListener(e -> interval = 200);
+        slowItem.addActionListener(e -> interval = 500);
         pauseIntervalGroup.add(slowItem);
         pauseIntervalMenu.add(slowItem);
         mediumItem.addActionListener(e -> interval = 100);
@@ -63,4 +75,20 @@ public class Menu extends JMenuBar {
         this.add(ayuda);
 
     }
+    private void startSorting(SortingAlgorithm algorithm) {
+        if (sortingWorker != null && !sortingWorker.isDone()) {
+            sortingWorker.cancel(true);
+        }
+        sortingWorker = new SortingWorker(algorithm);
+        sortingWorker.execute();
+    }
+    private void togglePause() {
+        isPaused = !isPaused;
+        if (!isPaused && sortingWorker != null && sortingWorker.isCancelled()) {
+            sortingWorker = null;
+            startSorting(sortingWorker.getCurrentAlgorithm());
+        }
+    }
+
+
 }

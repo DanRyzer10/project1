@@ -2,6 +2,7 @@ package views;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Random;
 
 public class PanelPrincipal extends JPanel {
     private int[] array;
@@ -26,7 +27,6 @@ public class PanelPrincipal extends JPanel {
 
     @Override
     public void paintComponent(Graphics g){
-
         super.paintComponent(g);
         int barHeight = getHeight();
         for(int i=0;i<array.length;i++){
@@ -51,64 +51,11 @@ public class PanelPrincipal extends JPanel {
     public Color ramdonColor(){
         return new Color((int)(Math.random()*255),(int)(Math.random()*255),(int)(Math.random()*255));
     }
-    public void animateSort() {
-        Timer timer = new Timer(1000, e -> {
-            boolean swapped = false;
-            for (int i = 0; i < array.length - 1; i++) {
-                if (array[i] > array[i + 1]) {
-                    // Realizar intercambio de posiciones
-                    int temp = array[i];
-                    array[i] = array[i + 1];
-                    array[i + 1] = temp;
-                    swapped = true;
-                }
-            }
-            if (!swapped) {
-                // Si no se realizó ningún intercambio, el arreglo ya está ordenado
-                ((Timer)e.getSource()).stop();
-            }
-            repaint();
-            // Realizar un paso del algoritmo de ordenación (por ejemplo, Bubble Sort)
-            // Actualizar el arreglo de barras
-            // Llamar a repaint() para volver a dibujar las barras
-        });
-        timer.setDelay(100);
-        timer.start();
-        Timer animationTimer = new Timer(300, e -> {
-            for (int i = 0; i < array.length; i++) {
-                int x = i * barWidth; // Posición actual de la barra
-                int y = getHeight() - array[i]; // Altura de la barra
-                int targetX = i * barWidth; // Posición objetivo de la barra
-                int targetY = getHeight() - array[i]; // Altura objetivo de la barra
 
-                if (x != targetX || y != targetY) {
-                    // Si la barra aún no ha llegado a su posición final, moverla gradualmente hacia allí
-                    if (x < targetX) {
-                        x++;
-                    } else if (x > targetX) {
-                        x--;
-                    }
-
-                    if (y < targetY) {
-                        y++;
-                    } else if (y > targetY) {
-                        y--;
-                    }
-
-                    array[i] = getHeight() - y; // Actualizar la altura de la barra en el arreglo
-                }
-            }
-            repaint();
-        });
-
-        animationTimer.setDelay(300); // Retraso entre cada movimiento de la barra
-        animationTimer.start();
-    }
     //get array
     public int[] getArray(){
         return array;
     }
-
 }
 
 

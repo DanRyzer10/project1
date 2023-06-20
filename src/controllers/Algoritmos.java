@@ -18,4 +18,18 @@ public class Algoritmos {
         panelPrincipal.setArray(array);
         VentanaPrincipal.panelPrincipal.repaint();
     }
+    //calculo de rendimiento O(n**2)
+    public static double calcularRendimiento(int n) {
+        long inicio = System.currentTimeMillis();
+        int rendimiento = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                rendimiento++;
+            }
+        }
+        long fin = System.currentTimeMillis();
+        return (fin - inicio) / 1000.0;
+    }
+
+    //calculo de rendimiento
 }

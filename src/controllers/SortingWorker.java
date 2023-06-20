@@ -8,9 +8,10 @@ import java.util.List;
 
 public class SortingWorker extends SwingWorker<Void, Void>{
     private final SortingAlgorithm algorithm;
-    public static int interval=500;
+    public static int interval=200;
     private SortingAlgorithm currentAlgorithm;
     int [] data= VentanaPrincipal.panelPrincipal.getArray();
+    public static long duration=0;
     public SortingWorker(SortingAlgorithm algorithm) {
         this.algorithm = algorithm;
         this.currentAlgorithm= algorithm;
@@ -21,10 +22,33 @@ public class SortingWorker extends SwingWorker<Void, Void>{
     @Override
     protected Void doInBackground() throws Exception {
         switch (algorithm) {
-            case BUBBLE_SORT -> bubbleSort();
-            case SELECTION_SORT -> selectionSort();
-            case INSERTION_SORT -> insertionSort();
-            case QUICK_SORT -> quickSort( 0, data.length - 1);
+            case BUBBLE_SORT:
+                long startTimeb = (int) System.currentTimeMillis();
+                bubbleSort();
+                long endTimeb = (int) System.currentTimeMillis();
+                duration = endTimeb - startTimeb;
+                break;
+            case SELECTION_SORT:
+                duration=0;
+                long startTimes = (int) System.currentTimeMillis();
+                selectionSort();
+                long endTimes = (int) System.currentTimeMillis();
+                duration = endTimes - startTimes;
+                break;
+            case INSERTION_SORT:
+                duration=0;
+                long startTimei = (int) System.currentTimeMillis();
+                insertionSort();
+                long endTimei = (int) System.currentTimeMillis();
+                duration = endTimei - startTimei;
+                break;
+            case QUICK_SORT :
+                duration=0;
+                long startTimeq = (int) System.currentTimeMillis();
+                quickSort( 0, data.length - 1);
+                long endTimeq = (int) System.currentTimeMillis();
+                duration = endTimeq - startTimeq;
+                break;
         }
         return null;
     }
